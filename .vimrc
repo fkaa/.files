@@ -1,5 +1,5 @@
-set nocompatible              " be iMproved, required
-filetype off                  " required
+set nocompatible
+filetype off
 
 set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
@@ -45,8 +45,6 @@ set encoding=utf-8
 
 let g:gitgutter_map_keys = 0
 let mapleader = " "
-
-match Error /\%81v.\+/
 
 nmap <leader>t :enew<CR>
 nmap <leader>l :bnext<CR>
