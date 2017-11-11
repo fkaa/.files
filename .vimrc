@@ -1,125 +1,107 @@
-set nocompatible              " be iMproved, required
-filetype off                  " required
+set nocompatible
+filetype off
 
-if has("win32")
-    set rtp+=~/vimfiles/bundle/Vundle.vim
-else
-    set rtp+=~/.vim/bundle/Vundle.vim
-endif
+"setup paths for temporary files (backup/swap/undo)
+set backupdir-=.
+set backupdir+=.
+set backupdir-=$HOME/
+set backupdir^=$HOME/.vim/tmp/backup//
+set backup
 
-call vundle#begin()
+set directory=$HOME/.vim/tmp/swap//
+set directory+=.
 
-Plugin 'octol/vim-cpp-enhanced-highlight'
-Plugin 'nathanaelkane/vim-indent-guides'
-Plugin 'vim-airline/vim-airline'
-Plugin 'airblade/vim-gitgutter'
-Plugin 'tpope/vim-fugitive'
-Plugin 'moll/vim-bbye'
+set undodir=$HOME/.vim/tmp/undo//
+set undofile
+
+set viminfo+=n$HOME/.vim/tmp/viminfo
+
+"setup Vundle
+set rtp+=$HOME/.vim/
+set rtp+=$HOME/.vim/bundle/Vundle.vim/
+call vundle#begin('$HOME/.vim/bundle/')
+
+"setup plugins
+Plugin 'VundleVim/Vundle.vim'
 Plugin 'rust-lang/rust.vim'
-Plugin 'kien/ctrlp.vim'
-Plugin 'morhetz/gruvbox'
+Plugin 'haya14busa/incsearch.vim'
+Plugin 'ctrlpvim/ctrlp.vim'
+Plugin 'airblade/vim-gitgutter'
 Plugin 'cespare/vim-toml'
-Plugin 'tikhomirov/vim-glsl'
-Plugin 'vimwiki/vimwiki'
-Plugin 'Valloric/YouCompleteMe'
+Plugin 'jiangmiao/auto-pairs'
+Plugin 'jceb/vim-hier'
 
-set hidden
-let g:ycm_rust_src_path = '/Users/fkaa/Code/Rust/rustc-1.8.0/src'
-set langmenu=en_US.UTF-8
-
-if has("win32")
-    set backupdir=~/vimfiles/backup//
-    set directory=~/vimfiles/swap//
-    set undodir=~/vimfiles/undo//
-else
-    set backupdir=~/.vim/backup//
-    set directory=~/.vim/swap//
-    set undodir=~/.vim/undo//
-endif
-
-set exrc
-set secure
-
-set t_8f=^[[38;2;%lu;%lu;%lum
-set t_8b=^[[48;2;%lu;%lu;%lum
-
-set laststatus=2
-set norelativenumber
-set showcmd
-set number
-set relativenumber
-set hidden
-set timeoutlen=2500
-set hlsearch
-set invlist
-set backspace=2
-set listchars=tab:>\ ,trail:-,extends:>,precedes:<,nbsp:+
-
+call vundle#end()
 filetype plugin indent on
-set tabstop=4
-set shiftwidth=4
-set expandtab
 
-set encoding=utf-8
-set shell=/bin/bash
+"plugin-specific
+map /  <Plug>(incsearch-forward)
 
-au BufRead,BufNewFile *.metal setfiletype cpp
+"turn on syntax highlighting
+syntax on
 
-let g:gitgutter_map_keys = 0
+"switch buffers without saving
+set hidden
+
+"make searching case-insensitive
+set ignorecase
+set smartcase
+
+"leader key on spacebar
 let mapleader = " "
 
-noremap <silent> <expr> j (v:count == 0 ? 'gj' : 'j')
-noremap <silent> <expr> k (v:count == 0 ? 'gk' : 'k')
+"navigate results in quickfix results
+nmap <leader>j :cn<CR>
+nmap <leader>k :cp<CR>
 
-nmap <leader>t :enew<CR>
-nmap <leader>l :bnext<CR>
-nmap <leader>h :bprevious<CR>
-nmap <leader>q :Bdelete<CR>
-nmap <leader>Q :Bdelete!<CR>
-nmap <leader>bl :ls<CR>
-
-nmap <Leader><CR> <Plug>VimwikiFollowLink
-nmap <Leader><S-CR> <Plug>VimwikiSplitLink
-nmap <Leader>wb <Plug>VimwikiGoBackLink
-
-nmap <leader>f :GitGutterToggle<CR>
-nmap <leader>g :YcmCompleter GoTo<CR>
-nmap <leader>z :set invlist<CR>
-
+"enter/shift-enter inserts newline before/after
 nmap <S-Enter> O<ESC>
 nmap <CR> o<ESC>
 
-call pathogen#infect()
-call pathogen#helptags()
+"dumb, but <CR> newline is so nice
+noremap <leader><CR> <CR>
 
-let g:gruvbox_italic=0
+"toggle display of list characters
+nnoremap <F3> :set list!<CR>
 
-colorscheme gruvbox
-set background=dark    " Setting dark mode
-syntax on
+"`normal` backspace behavior
+set backspace=indent,eol,start
 
-let g:ctrlp_custom_ignore = {
-  \ 'dir':  '\v[\/](\.(git|hg|svn)|\_site)$',
-  \ 'file': '\v\.(exe|so|dll|class|png|jpg|jpeg)$',
-\}
+"sane indenting setting
+set autoindent    "copies indentation settings from current line
+set smarttab      "indentation based on `shiftwidth`
 
-let g:ctrlp_working_path_mode = 'r'
+set tabstop=4     "tabs display size
+set shiftwidth=4  "indent width
+set softtabstop=4 "logical width for tabs
+set expandtab     "replace tab with spaces
 
-nmap <leader>p :CtrlP<CR>
-nmap <leader>bb :CtrlPBuffer<CR>
-nmap <leader>bm :CtrlPMixed<CR>
-nmap <leader>bs :CtrlPMRU<CR>
+"show search results while searching
+set incsearch
 
-if !exists('g:airline_symbols')
-    let g:airline_symbols = {}
-endif
+"persistent highlighting for search results
+set hlsearch
 
-"let g:airline_left_sep = ''
-"let g:airline_left_alt_sep = ''
-"let g:airline_right_sep = ''
-"let g:airline_right_alt_sep = ''
-"let g:airline_symbols.branch = ''
-"let g:airline_symbols.readonly = ''
-"let g:airline_symbols.linenr = ''
+"always leave a gap after cursor
+set scrolloff=3
 
-let g:airline#extensions#tabline#enabled = 1
+"show completion suggestions for command-line (in vim)
+set wildmenu
+
+"show status line for each window (always)
+set laststatus=2
+
+"shows line number in status line
+set ruler
+
+"makes long lines not get hidden with `@`
+set display+=lastline
+
+"list characters
+set listchars=tab:>\ ,trail:-,extends:>,precedes:<,nbsp:+
+
+"personal workspace stuff
+compiler cargo
+
+"color theme
+:color tmtu
