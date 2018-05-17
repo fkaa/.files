@@ -17,8 +17,9 @@ hi Function     guifg=#eeeeee          guibg=NONE      gui=bold
 hi String       guifg=#838383          guibg=NONE      gui=NONE
 hi Type         guifg=#eeeeee          guibg=NONE      gui=bold
 hi Conditional  guifg=#787878          guibg=NONE      gui=bold
-hi Todo         guifg=#ff0000          guibg=#220000   gui=underline
-hi Comment      guifg=#777777          guibg=NONE      gui=NONE
+hi Todo         guifg=#FF4040          guibg=#220000   gui=underline
+hi Comment      guifg=#C0FF00          guibg=NONE      gui=NONE
+hi SpecialComment      guifg=#00FFB6          guibg=#102B23      gui=NONE
 hi PmenuSel     guifg=#000000          guibg=#a9a9aa   gui=bold
 hi Special      guifg=#868585          guibg=NONE      gui=NONE
 hi Identifier   guifg=#ffffff          guibg=NONE      gui=bold
@@ -62,7 +63,7 @@ hi SpecialKey   guifg=#454545          guibg=#000000   gui=NONE
 
 hi SpellBad     guisp=#ffffff          guibg=#000000   gui=undercurl    guisp=#ffc0c0
 hi SpellCap     guisp=#5d5d5d                          gui=undercurl
-hi SpellLocal   guisp=#434343                          gui=undercurl
+hi SpellLocal   guisp=#434343                          gui=undercurl 
 hi SpellRare    guisp=#7d7d7d                          gui=undercurl
 hi StatusLine   guifg=#000000          guibg=#727272   gui=bold
 hi StatusLineNC guifg=#5a5959          guibg=#222222   gui=italic
@@ -86,8 +87,9 @@ hi VimError         guifg=#b6b6b6      guibg=#313131   gui=bold
 hi VimCommentTitle  guifg=#5c5c5c      guibg=bg        gui=bold,italic
 hi qfFileName       guifg=#6a6a6a      guibg=NONE      gui=italic
 hi qfLineNr         guifg=fg           guibg=NONE      gui=NONE
-hi qfError          guifg=#ff0000      guibg=#220000   gui=NONE
-hi SpellLocal       guifg=#ff9955      guibg=NONE   gui=NONE
+hi qfError          guifg=#FF4040      guibg=#220000   gui=undercurl guisp=#ff0000
+
+hi SpellLocal       guifg=#ff9955      guibg=NONE   gui=undercurl
 
 "256-color Terminal support
 if &t_Co > 255

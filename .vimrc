@@ -28,8 +28,8 @@ Plugin 'haya14busa/incsearch.vim'
 Plugin 'ctrlpvim/ctrlp.vim'
 Plugin 'airblade/vim-gitgutter'
 Plugin 'cespare/vim-toml'
-Plugin 'jiangmiao/auto-pairs'
-Plugin 'jceb/vim-hier'
+Plugin 'tpope/vim-fugitive'
+Plugin 'junegunn/goyo.vim' 
 
 call vundle#end()
 filetype plugin indent on
@@ -63,6 +63,9 @@ noremap <leader><CR> <CR>
 
 "toggle display of list characters
 nnoremap <F3> :set list!<CR>
+
+nnoremap K <PageUp>
+nnoremap J <PageDown>
 
 "`normal` backspace behavior
 set backspace=indent,eol,start
@@ -100,8 +103,5 @@ set display+=lastline
 "list characters
 set listchars=tab:>\ ,trail:-,extends:>,precedes:<,nbsp:+
 
-"personal workspace stuff
-compiler cargo
-
 "color theme
-:color tmtu
+:color desert 
