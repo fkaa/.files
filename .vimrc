@@ -30,9 +30,18 @@ Plugin 'airblade/vim-gitgutter'
 Plugin 'cespare/vim-toml'
 Plugin 'tpope/vim-fugitive'
 Plugin 'junegunn/goyo.vim' 
+Plugin 'beyondmarc/hlsl.vim'
+Plugin 'jceb/vim-orgmode'
+Plugin 'majutsushi/tagbar'
+Plugin 'inkarkat/vim-SyntaxRange'
 
 call vundle#end()
 filetype plugin indent on
+
+function! TODay()
+    execute  "e " . strftime("C:\\TODO\\%Y-%m-%d.org")
+endfunction
+command! -nargs=0 TODay call TODay()
 
 "plugin-specific
 map /  <Plug>(incsearch-forward)
@@ -53,6 +62,8 @@ let mapleader = " "
 "navigate results in quickfix results
 nmap <leader>j :cn<CR>
 nmap <leader>k :cp<CR>
+
+let g:ctrlp_map = '<c-k>'
 
 "enter/shift-enter inserts newline before/after
 nmap <S-Enter> O<ESC>
@@ -103,5 +114,9 @@ set display+=lastline
 "list characters
 set listchars=tab:>\ ,trail:-,extends:>,precedes:<,nbsp:+
 
+"custom statusline, shows git branch, file type, line number
+set statusline=%f\ %m%=%{fugitive#statusline()}\ (%{strlen(&ft)?&ft:'?'},%{&ff})\ \ %-9.(%l,%c%V%)\ \ %<%P
+
 "color theme
-:color desert 
+set background=light
+color pencil 
