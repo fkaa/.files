@@ -26,22 +26,15 @@ Plugin 'VundleVim/Vundle.vim'
 Plugin 'rust-lang/rust.vim'
 Plugin 'haya14busa/incsearch.vim'
 Plugin 'ctrlpvim/ctrlp.vim'
-Plugin 'airblade/vim-gitgutter'
-Plugin 'cespare/vim-toml'
 Plugin 'tpope/vim-fugitive'
-Plugin 'junegunn/goyo.vim' 
+Plugin 'ludovicchabant/vim-gutentags'
+
+"file syntax
+Plugin 'cespare/vim-toml'
 Plugin 'beyondmarc/hlsl.vim'
-Plugin 'jceb/vim-orgmode'
-Plugin 'majutsushi/tagbar'
-Plugin 'inkarkat/vim-SyntaxRange'
 
 call vundle#end()
 filetype plugin indent on
-
-function! TODay()
-    execute  "e " . strftime("C:\\TODO\\%Y-%m-%d.org")
-endfunction
-command! -nargs=0 TODay call TODay()
 
 "plugin-specific
 map /  <Plug>(incsearch-forward)
@@ -56,6 +49,8 @@ set hidden
 set ignorecase
 set smartcase
 
+set encoding=utf-8
+
 "leader key on spacebar
 let mapleader = " "
 
@@ -64,6 +59,7 @@ nmap <leader>j :cn<CR>
 nmap <leader>k :cp<CR>
 
 let g:ctrlp_map = '<c-k>'
+nnoremap <c-t> :CtrlPTag<CR>
 
 "enter/shift-enter inserts newline before/after
 nmap <S-Enter> O<ESC>
@@ -117,6 +113,10 @@ set listchars=tab:>\ ,trail:-,extends:>,precedes:<,nbsp:+
 "custom statusline, shows git branch, file type, line number
 set statusline=%f\ %m%=%{fugitive#statusline()}\ (%{strlen(&ft)?&ft:'?'},%{&ff})\ \ %-9.(%l,%c%V%)\ \ %<%P
 
+set tags=./.tags,.tags;
+
+let g:gutentags_ctags_tagfile = '.tags'
+
 "color theme
 set background=light
-color pencil 
+color holy 
