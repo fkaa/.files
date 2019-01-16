@@ -1,0 +1,68 @@
+(require 'package)
+(add-to-list 'package-archives
+             '("melpa" . "https://melpa.org/packages/") t)
+(package-initialize)
+
+(setq inhibit-startup-screen t)
+(setq frame-title-format (list "Circe [%b] [" (getenv "USERNAME") "@" (getenv "USERDOMAIN") "]"))
+
+(add-to-list 'default-frame-alist '(font . "Times New Roman" ))
+(set-face-attribute 'default t :font "Times New Roman" )
+(set-face-attribute 'default nil :font "Times New Roman" )
+(set-frame-font "Times New Roman" nil t)
+
+(require 'lab-themes)
+(lab-themes-load-style 'light)
+
+(require 'circe)
+
+(setq circe-network-options
+      '(("esper"
+	 :nick "tmtu"
+  	 :channels ("#fishstick"
+ 		    "#risucraft"
+		    "#tropicraft")
+	 :host "irc.esper.net"
+	 :port (6667 . 6697))
+	("moznet"
+	 :nick "fkaa"
+	 :channels ("#rust-gamedev"
+		    "#rust-offtopic"
+		    "#winapi")
+	 :host "irc.mozilla.org"
+	 :port (6667 . 6697))))
+
+(defvar my-circe-bot-list '("megumin" "Shocky2"))
+(defun my-circe-message-option-bot (nick &rest ignored)
+  (when (member nick my-circe-bot-list)
+    '((text-properties . (face circe-fool-face
+                          lui-do-not-track t)))))
+(add-hook 'circe-message-option-functions 'my-circe-message-option-bot)
+
+(setq circe-reduce-lurker-spam t)
+
+; (setq lui-track-bar-behavior 'before-switch-to-buffer)
+; (enable-lui-track-bar)
+
+(setq
+ lui-time-stamp-position 'right-margin
+ lui-fill-type nil)
+
+(add-hook 'lui-mode-hook 'my-lui-setup)
+(defun my-lui-setup ()
+  (setq
+   fringes-outside-margins t
+   right-margin-width 8
+   word-wrap t
+   wrap-prefix "    "))
+
+(require 'circe-color-nicks)
+(enable-circe-color-nicks)
+
+(defun irc ()
+  ""
+  (interactive)
+  (circe "esper")
+  (circe "moznet"))
+
+(prefer-coding-system 'utf-8-unix)
