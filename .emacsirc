@@ -3,6 +3,9 @@
              '("melpa" . "https://melpa.org/packages/") t)
 (package-initialize)
 
+(menu-bar-mode -1)
+(tool-bar-mode -1)
+
 (setq inhibit-startup-screen t)
 (setq frame-title-format (list "Circe [%b] [" (getenv "USERNAME") "@" (getenv "USERDOMAIN") "]"))
 
@@ -11,8 +14,8 @@
 (set-face-attribute 'default nil :font "Times New Roman" )
 (set-frame-font "Times New Roman" nil t)
 
-(require 'lab-themes)
-(lab-themes-load-style 'light)
+(require 'gruvbox-theme)
+;(lab-themes-load-style 'light)
 
 (require 'circe)
 
@@ -20,14 +23,14 @@
       '(("esper"
 	 :nick "tmtu"
   	 :channels ("#fishstick"
- 		    "#risucraft"
-		    "#tropicraft")
+	 	    "#fishstick-radio")
+ 		    ; "#risucraft"
+		    ; "#tropicraft")
 	 :host "irc.esper.net"
 	 :port (6667 . 6697))
 	("moznet"
 	 :nick "fkaa"
 	 :channels ("#rust-gamedev"
-		    "#rust-offtopic"
 		    "#winapi")
 	 :host "irc.mozilla.org"
 	 :port (6667 . 6697))))
