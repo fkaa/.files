@@ -3,69 +3,101 @@
              '("melpa" . "https://melpa.org/packages/") t)
 (package-initialize)
 
-(menu-bar-mode -1)
-(tool-bar-mode -1)
+;(menu-bar-mode -1)
+;(tool-bar-mode -1)
 
 (setq inhibit-startup-screen t)
-(setq frame-title-format (list "Circe [%b] [" (getenv "USERNAME") "@" (getenv "USERDOMAIN") "]"))
+(setq frame-title-format (list "Circe [%b] [" (getenv "USER") "@yukari]"))
 
 (add-to-list 'default-frame-alist '(font . "Times New Roman" ))
 (set-face-attribute 'default t :font "Times New Roman" )
 (set-face-attribute 'default nil :font "Times New Roman" )
 (set-frame-font "Times New Roman" nil t)
 
-(require 'gruvbox-theme)
-;(lab-themes-load-style 'light)
+(load-theme 'adwaita)
 
-(require 'circe)
+(require 'erc)
 
-(setq circe-network-options
-      '(("esper"
-	 :nick "tmtu"
-  	 :channels ("#fishstick"
-	 	    "#fishstick-radio")
- 		    ; "#risucraft"
-		    ; "#tropicraft")
-	 :host "irc.esper.net"
-	 :port (6667 . 6697))
-	("moznet"
-	 :nick "fkaa"
-	 :channels ("#rust-gamedev"
-		    "#winapi")
-	 :host "irc.mozilla.org"
-	 :port (6667 . 6697))))
+(defun erc-cmd-SPOOK ()
+  (let* ((spook (with-temp-buffer (spook) (buffer-string)))
+	 (output (replace-regexp-in-string "\n" " " spook)))
+    (erc-send-message output)))
 
-(defvar my-circe-bot-list '("megumin" "Shocky2"))
-(defun my-circe-message-option-bot (nick &rest ignored)
-  (when (member nick my-circe-bot-list)
-    '((text-properties . (face circe-fool-face
-                          lui-do-not-track t)))))
-(add-hook 'circe-message-option-functions 'my-circe-message-option-bot)
+(setq erc-remove-parsed-property nil)
 
-(setq circe-reduce-lurker-spam t)
+(autoload 'doctor-doc "doctor")
+(autoload 'make-doctor-variables "doctor")
 
-; (setq lui-track-bar-behavior 'before-switch-to-buffer)
-; (enable-lui-track-bar)
-
-(setq
- lui-time-stamp-position 'right-margin
- lui-fill-type nil)
-
-(add-hook 'lui-mode-hook 'my-lui-setup)
-(defun my-lui-setup ()
-  (setq
-   fringes-outside-margins t
-   right-margin-width 8
-   word-wrap t
-   wrap-prefix "    "))
-
-(require 'circe-color-nicks)
-(enable-circe-color-nicks)
+(defvar erc-doctor-id "")
+(defun erc-cmd-DOCTOR (&optional last-sender &rest ignore)
+  "Get the last message in the channel and doctor it."
+  (let ((limit (- (point) 1000))
+        (pos (point))
+        doctor-buffer
+        last-message
+        text)
+    ;; Make sure limit is not negative
+    (when (< limit 0) (setq limit 0))
+    ;; Search backwards for text from someone
+    (while (and pos (not (let ((data (get-text-property pos 'erc-parsed)))
+                           (and data
+                                (string= (aref data 3) "PRIVMSG")
+                                (or (not last-sender)
+                                    (string= (car (split-string (aref data 2) "!"))
+                                             last-sender))))))
+      (setq pos (previous-single-property-change
+                 pos 'erc-parsed nil limit))
+      (when (= pos limit)
+        (error "No appropriate previous message to doctor")))
+    (when pos
+      (setq last-sender (car (split-string
+                              (aref (get-text-property
+                                     pos 'erc-parsed) 2) "!"))
+            doctor-buffer (concat "*ERC Doctor: " last-sender "*")
+            last-message (split-string
+                          ;; Remove punctuation from end of sentence
+                          (replace-regexp-in-string
+                           "[ .?!;,/]+$" ""
+                           (aref (get-text-property pos
+                                                    'erc-parsed) 5)))
+            text (mapcar (lambda (s)
+                           (intern (downcase s)))
+                         ;; Remove salutation if it exists
+                         (if (string-match
+                              (concat "^" erc-valid-nick-regexp
+                                      "[:,]*$\\|[:,]+$")
+                              (car last-message))
+                             (cdr last-message)
+                           last-message))))
+    (erc-send-message
+     (concat (if (not (erc-query-buffer-p))
+                 (concat last-sender ": "))
+	     erc-doctor-id
+             (save-excursion
+               (if (get-buffer doctor-buffer)
+                   (set-buffer doctor-buffer)
+                 (set-buffer (get-buffer-create doctor-buffer))
+                 (make-doctor-variables))
+               (erase-buffer)
+	       (setq doctor-sent text)
+               (doctor-doc)
+               (buffer-string))))))
+	 
+(setq erc-autojoin-channels-alist
+      '(("freenode.net" "#renderdoc" "#hedgewars")
+	("esper.net" "#fishstick" "#fishstick-radio")
+	("mozilla.org" "#rust-gamedev" "#winapi")))
 
 (defun irc ()
   ""
   (interactive)
-  (circe "esper")
-  (circe "moznet"))
+  (erc :server "irc.esper.net" :port 6667 :nick "tmtu")
+  (erc :server "irc.freenode.net" :port 6667 :nick "fkaa")
+  (erc :server "irc.mozilla.org" :port 6667 :nick "fkaa"))
 
 (prefer-coding-system 'utf-8-unix)
+
+(setq gnus-select-method '(nntp "news.gwene.org"))
+; (add-to-list 'gnus-secondary-select-methods '(nntp "localhost"))
+(add-to-list 'gnus-secondary-select-methods '(nntp "news.gnus.org"))
+(add-to-list 'gnus-secondary-select-methods '(nnml ""))
