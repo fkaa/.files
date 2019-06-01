@@ -12,6 +12,11 @@
 
 (show-paren-mode t)
 (setq show-paren-style 'parenthesis)
+;; "normal" scrolling
+(setq mouse-wheel-scroll-amount '(1 ((shift) . 1))) ;; one line at a time
+(setq mouse-wheel-progressive-speed nil) ;; don't accelerate scrolling
+(setq mouse-wheel-follow-mouse 't) ;; scroll window under mouse
+(setq scroll-step 1) ;; keyboard scroll one line at a time
 
 ;; font setup
 (set-face-attribute 'default nil :family "Times New Roman" :height 140)
@@ -51,7 +56,8 @@
 (use-package rust-mode
   :ensure t
   :config
-  (setq rust-match-angle-brackets nil))
+  (setq rust-match-angle-brackets nil)
+  (add-hook 'rust-mode-hook 'glasses-mode))
 
 (use-package auto-complete
   :ensure t
@@ -62,6 +68,10 @@
   (define-key ac-complete-mode-map "\t" 'ac-complete)
   (define-key ac-complete-mode-map "\r" nil))
 
+(use-package expand-region
+  :ensure t
+  :config
+  (global-set-key (kbd "C-=") 'er/expand-region))
 
 ;; custom stuff
 (custom-set-variables
